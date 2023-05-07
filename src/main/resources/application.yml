@@ -1,0 +1,42 @@
+
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      circuitBreakerForKafka:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+
+  rateLimiter:
+    instances:
+      markReadinessRateLimit:
+        registerHealthIndicator: true
+        limitRefreshPeriod: 10s
+        limitForPeriod: 10
+        timeoutDuration: 20
+
+
+
+
+
